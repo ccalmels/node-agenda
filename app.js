@@ -1,5 +1,7 @@
 const express = require('express');
+const bodyParser = require("body-parser")
 const MongoClient = require('mongodb').MongoClient;
+const ObjectId = require('mongodb').ObjectId;
 const assert = require('assert');
 const app = express();
 const port = 3000;
@@ -13,6 +15,8 @@ MongoClient.connect(uri, { useUnifiedTopology: true }, function(err, client) {
     const events = client.db('Agenda').collection('events');
 
     app.use(express.static('public'));
+    app.use(bodyParser.json());
+    app.use(bodyParser.urlencoded({ extended: true })); //extended:true to encode objects and arrays  https://github.com/expressjs/body-parser#bodyparserurlencodedoptions
 
     app.get('/data', function(req, res) {
 	events.find().toArray(function (err, data) {
@@ -24,6 +28,32 @@ MongoClient.connect(uri, { useUnifiedTopology: true }, function(err, client) {
             //output response
             res.send(data);
 	});
+    });
+
+    app.post('/data', function (req, res) {
+        var data = req.body;
+        var mode = data["!nativeeditor_status"];
+        var sid = data.id;
+        var tid = sid;
+
+        function update_response(err) {
+            if (err)
+                mode = "error";
+            else if (mode == "inserted"){
+                tid = data._id;
+            }
+            res.setHeader("Content-Type", "application/json");
+            res.send({ action: mode, sid: sid, tid: String(tid) });
+        }
+
+        if (mode == "updated") {
+            events.updateOne({"_id": ObjectId(tid)}, {$set: data}, update_response);
+        } else if (mode == "inserted") {
+            events.insertOne(data, update_response);
+        } else if (mode == "deleted") {
+            events.deleteOne({"_id": ObjectId(tid)}, update_response)
+        } else
+            res.send("Not supported operation");
     });
 
     app.listen(port, function() {
