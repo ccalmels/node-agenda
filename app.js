@@ -39,7 +39,7 @@ MongoClient.connect(uri, { useUnifiedTopology: true }, function(err, client) {
         function update_response(err) {
             if (err)
                 mode = "error";
-            else if (mode == "inserted"){
+            else if (mode == "inserted") {
                 tid = data._id;
             }
             res.setHeader("Content-Type", "application/json");
