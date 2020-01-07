@@ -19,14 +19,17 @@ MongoClient.connect(uri, { useUnifiedTopology: true }, function(err, client) {
     app.use(bodyParser.urlencoded({ extended: true })); //extended:true to encode objects and arrays  https://github.com/expressjs/body-parser#bodyparserurlencodedoptions
 
     app.get('/data', function(req, res) {
-	events.find().toArray(function (err, data) {
-            //set the id property for all client records to the database records, which are stored in ._id field
-            for (var i = 0; i < data.length; i++){
+	events.find({
+	    "end_date": { "$gte": req.query.from },
+	    "start_date": { "$lt": req.query.to }
+	}).toArray(function (err, data) {
+	    //set the id property for all client records to the database records, which are stored in ._id field
+	    for (var i = 0; i < data.length; i++){
 		data[i].id = data[i]._id;
 		delete data[i]["!nativeeditor_status"];
-            }
-            //output response
-            res.send(data);
+	    }
+	    //output response
+	    res.send(data);
 	});
     });
 
