@@ -40,6 +40,14 @@
      scheduler.config.first_hour = 7;
      scheduler.config.last_hour = 20;
 
+     scheduler.config.lightbox.sections = [
+	 { name:"description", height:1, map_to:"text", type:"textarea" , focus:true},
+	 { name:"comments", height:200, map_to:"description", type:"textarea" },
+	 { name:"time", height:72, type:"time", map_to:"auto"}
+     ];
+
+     scheduler.locale.labels.section_comments = "Commentaires";
+
      scheduler.init("scheduler_here", null, "week");
      // enables the dynamic loading
      scheduler.setLoadMode("day");
