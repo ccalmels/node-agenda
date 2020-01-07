@@ -5,6 +5,7 @@
     <link rel="stylesheet" href="https://cdn.dhtmlx.com/scheduler/edge/dhtmlxscheduler_material.css">
     <script src="https://cdn.dhtmlx.com/scheduler/edge/dhtmlxscheduler.js"></script>
     <script src="https://cdn.dhtmlx.com/scheduler/edge/locale/locale_fr.js" charset="utf-8"></script>
+    <script src="https://cdn.dhtmlx.com/scheduler/edge/ext/dhtmlxscheduler_multiselect.js"></script>
 
     <style type="text/css" media="screen">
      html, body {
@@ -43,10 +44,18 @@
      scheduler.config.lightbox.sections = [
 	 { name:"description", height:1, map_to:"text", type:"textarea" , focus:true},
 	 { name:"comments", height:200, map_to:"description", type:"textarea" },
+	 { name:"userselect", height:22, map_to:"user_id", type:"multiselect",
+	   options: [
+	       { key: 1, label: 'Luke' },
+	       { key: 2, label: 'Leia' },
+	       { key: 3, label: 'Han' },
+	   ],
+	   vertical:false },
 	 { name:"time", height:72, type:"time", map_to:"auto"}
      ];
 
      scheduler.locale.labels.section_comments = "Commentaires";
+     scheduler.locale.labels.section_userselect = "Participants";
 
      scheduler.init("scheduler_here", null, "week");
      // enables the dynamic loading
