@@ -20,7 +20,7 @@ MongoClient.connect(uri, { useUnifiedTopology: true }, function(err, client) {
 
     app.get('/data', function(req, res) {
 	events.find({
-	    "end_date": { "$gte": req.query.from },
+	    "end_date": { "$gt": req.query.from },
 	    "start_date": { "$lt": req.query.to }
 	}).toArray(function (err, data) {
 	    //set the id property for all client records to the database records, which are stored in ._id field
