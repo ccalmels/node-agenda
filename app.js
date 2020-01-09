@@ -8,12 +8,7 @@ const port = 3000;
 
 const uri = 'mongodb://127.0.0.1:27017/';
 
-MongoClient.connect(uri, { useUnifiedTopology: true }, function(err, client) {
-    assert.equal(null, err);
-    console.log("Connected successfully to mongoDB server");
-
-    const events = client.db('Agenda').collection('events');
-
+function express_start(events) {
     app.use(express.static('public'));
     app.use(bodyParser.json());
     app.use(bodyParser.urlencoded({ extended: true })); //extended:true to encode objects and arrays  https://github.com/expressjs/body-parser#bodyparserurlencodedoptions
@@ -62,4 +57,11 @@ MongoClient.connect(uri, { useUnifiedTopology: true }, function(err, client) {
     app.listen(port, function() {
 	console.log("Server is running on port " + port + "...");
     });
+}
+
+MongoClient.connect(uri, { useUnifiedTopology: true }, function(err, client) {
+    assert.equal(null, err);
+    console.log("Connected successfully to mongoDB server");
+
+    return express_start(client.db('Agenda').collection('events'));
 });
